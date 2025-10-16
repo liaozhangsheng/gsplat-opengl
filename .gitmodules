@@ -1,0 +1,6 @@
+[submodule "3rdparty/tinyply"]
+	path = 3rdparty/tinyply
+	url = https://github.com/ddiakopoulos/tinyply.git
+[submodule "3rdparty/glad"]
+	path = 3rdparty/glad
+	url = https://github.com/premake-libs/glad.git
