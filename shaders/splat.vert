@@ -52,7 +52,7 @@ void main() {
     mat3 T = transpose(mat3(view)) * J;
     mat3 cov2d = transpose(T) * Vrk * T;
     
-    // Add low-pass filter (减小值以获得更精细的splat)
+    // Add low-pass filter (reduce value for finer splats)
     cov2d[0][0] += 0.1;
     cov2d[1][1] += 0.1;
     
@@ -68,7 +68,7 @@ void main() {
     }
     
     vec2 diagonalVector = normalize(vec2(cov2d[0][1], lambda1 - cov2d[0][0]));
-    // 减小scale以获得更精细的splat覆盖
+    // Reduce scale for finer splat coverage
     float scale = 2.5;
     vec2 majorAxis = scale * min(sqrt(2.0 * lambda1), 1024.0) * diagonalVector;
     vec2 minorAxis = scale * min(sqrt(2.0 * lambda2), 1024.0) * vec2(diagonalVector.y, -diagonalVector.x);

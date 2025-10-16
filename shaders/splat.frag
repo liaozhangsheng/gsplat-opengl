@@ -5,41 +5,41 @@ in vec2 vPosition;
 
 out vec4 fragColor;
 
-// 提高饱和度函数
+// Function to increase saturation
 vec3 adjustSaturation(vec3 color, float saturation) {
     const vec3 luminanceWeights = vec3(0.2126, 0.7152, 0.0722);
     float luminance = dot(color, luminanceWeights);
     return mix(vec3(luminance), color, saturation);
 }
 
-// 白点调整（曝光和色调映射）
+// White point adjustment (exposure and tone mapping)
 vec3 adjustWhitePoint(vec3 color, float whitePoint) {
-    // 使用Reinhard色调映射变体
+    // Use Reinhard tone mapping variant
     return color * (1.0 + color / (whitePoint * whitePoint)) / (1.0 + color);
 }
 
 void main() {
     float A = -dot(vPosition, vPosition);
     
-    // 更严格的裁剪以获得更精细的边缘
+    // Stricter clipping for finer edges
     if (A < -4.0) discard;
     
-    // 使用更平滑的衰减曲线
+    // Use smoother attenuation curve
     float gaussian = exp(A);
     
-    // 添加边缘平滑，减少锯齿
+    // Add edge smoothing to reduce aliasing
     float edgeSmoothness = smoothstep(-4.0, -3.5, A);
     float B = gaussian * vColor.a * edgeSmoothness;
     
     vec3 color = B * vColor.rgb;
     
-    // 调整饱和度 (1.0 = 原始, >1.0 = 更饱和, <1.0 = 去饱和)
+    // Adjust saturation (1.0 = original, >1.0 = more saturated, <1.0 = desaturated)
     color = adjustSaturation(color, 1.2);
     
-    // 调整白点 (更低的值 = 更亮的高光)
+    // Adjust white point (lower value = brighter highlights)
     color = adjustWhitePoint(color, 0.9);
     
-    // 轻微的锐化效果，增强细节
+    // Slight sharpening effect to enhance details
     float sharpness = 1.05;
     color = pow(color, vec3(1.0 / sharpness));
     
